@@ -1,5 +1,3 @@
-Sure! Here's the information provided in a README file format:
-
 # Variable Priority in Terraform
 
 This README file explains the priority order of variables in Terraform, based on various sources. The following proofs demonstrate how variables are prioritized in different scenarios.

@@ -1,56 +1,82 @@
-PROOF 1 : to check the priporty of command_line_flag which is 1
+Sure! Here's the information provided in a README file format:
 
-run the following commands
+# Variable Priority in Terraform
 
-1. export TF_VAR_instancetype="t2.nano"
-2. terraform plan -var="instancetype=t2.small"
+This README file explains the priority order of variables in Terraform, based on various sources. The following proofs demonstrate how variables are prioritized in different scenarios.
 
-u can see that 
-instance_type                        = "t2.small"
+## Proof 1: Command Line Flag (Priority 1)
 
-even if files like terraform.tfvars and variables.tf is present and env_var=TF_VAR_instancetype is present the priority goes to command_line_flag which which is -var="instancetype=t2.small"
+To check the priority of the command line flag, perform the following steps:
 
-PROOF 2: to check the priporty of tfvars file which is 2
+1. Set the environment variable `TF_VAR_instancetype` to "t2.nano".
+   ```
+   export TF_VAR_instancetype="t2.nano"
+   ```
 
-run the following commands
+2. Run the command:
+   ```
+   terraform plan -var="instancetype=t2.small"
+   ```
 
-1. export TF_VAR_instancetype="t2.nano"
-2. terraform plan 
+   The output will show that `instance_type` is set to "t2.small". This indicates that the command line flag `-var` takes priority over other sources.
 
-u can see that 
-instance_type                        = "t2.medium"
+## Proof 2: tfvars File (Priority 2)
 
-even if files like variables.tf is present and has default value as t2.micro and env_var=TF_VAR_instancetype is present the priority goes to .tfvars files which is instancetype="t2.medium" in file terraform.tfvars
+To check the priority of the tfvars file, follow these steps:
 
-PROOF 3: to check the priority of Environment variable which is 3
+1. Set the environment variable `TF_VAR_instancetype` to "t2.nano".
+   ```
+   export TF_VAR_instancetype="t2.nano"
+   ```
 
-create enviroment variable which starts with "TF_VAR_" and add the variable string to it
+2. Run the command:
+   ```
+   terraform plan
+   ```
 
-export TF_VAR_{variable_name} = {variable_value}
+   The output will show that `instance_type` is set to "t2.medium". This indicates that the `.tfvars` file (`terraform.tfvars` in this case) takes priority over other sources.
 
-example: 
-1. export TF_VAR_instancetype="t2.nano"
-2. comment out the terraform.tfvars
-3. terraform plan 
+## Proof 3: Environment Variable (Priority 3)
 
-u can see that 
-instance_type                        = "t2.nano"
+To check the priority of environment variables, follow these steps:
 
-even if files like variables.tf is present and has default value as t2.micro 
+1. Create an environment variable starting with "TF_VAR_" and add the variable string to it. For example:
+   ```
+   export TF_VAR_instancetype="t2.nano"
+   ```
 
-PROOF 4: to check the priority of variable defaults from variables.tf which is 4
+2. Comment out the `terraform.tfvars` file.
 
-example: 
-1. unset TF_VAR_instancetype
-2. comment out the terraform.tfvars
-3. terraform plan 
+3. Run the command:
+   ```
+   terraform plan
+   ```
 
-u can see that 
-instance_type                        = "t2.micro"
+   The output will show that `instance_type` is set to "t2.nano". This demonstrates that environment variables prefixed with "TF_VAR_" take priority over other sources.
 
-since the only way to fetch the variable is from varaibles.tf so the default variable is fetched
-the last preority
+## Proof 4: Variable Defaults from variables.tf (Priority 4)
 
-so the priority for fetching variables goes like this
+To check the priority of variable defaults from the `variables.tf` file, follow these steps:
 
+1. Unset the environment variable `TF_VAR_instancetype`.
+   ```
+   unset TF_VAR_instancetype
+   ```
 
+2. Comment out the `terraform.tfvars` file.
+
+3. Run the command:
+   ```
+   terraform plan
+   ```
+
+   The output will show that `instance_type` is set to "t2.micro". This indicates that when no other sources are available, the default value defined in the `variables.tf` file is used as a fallback.
+
+In summary, the priority for fetching variables in Terraform follows the order:
+
+1. Command line flag (`-var` option)
+2. tfvars file (e.g., `terraform.tfvars`)
+3. Environment variables (prefixed with "TF_VAR_")
+4. Variable defaults from `variables.tf`
+
+Make sure to consider this priority order when setting and managing variables in your Terraform projects.

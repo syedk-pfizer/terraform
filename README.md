@@ -15,12 +15,6 @@ This repository provides hands-on exercises and examples for working with Terraf
 
 
 
-
-
-
-
-
-
 ## Removing Heavy Provider Files/Folders
 
 To remove heavy provider files/folders from your system, follow these steps:
